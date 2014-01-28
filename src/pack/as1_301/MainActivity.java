@@ -1,7 +1,14 @@
 package pack.as1_301;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+
+import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,6 +20,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
+	private static final String FILENAME = "midday.sav";
 	private ListView counterList;
 
     @Override
@@ -52,17 +60,32 @@ public class MainActivity extends Activity {
     }
     
     private ArrayList<Counter> loadFromFile() {
-		ArrayList<Counter> tweets = new ArrayList<Counter>();
-		
-		
-		
-		return tweets;
+    	ArrayList<Counter> counters = new ArrayList<Counter>();
+        try {
+                FileInputStream fis = openFileInput(FILENAME);
+                BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+                String line = in.readLine();
+                
+                Counter counter = deserialization(line);
+                
+                while (counter != null) {
+                	counters.add(counter);
+                        line = in.readLine();
+                }
+
+        } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        }
+        return counters;
 	}
     
-    private Counter deserialization(Counter counter) {
-        
+    private Counter deserialization(String text) {
         Gson gson = new Gson();
-        Counter new_counter = gson.fromJson(counter, Counter.class);
+        Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
 	
