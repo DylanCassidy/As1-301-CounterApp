@@ -3,6 +3,10 @@
 
     <string name="app_name">dylan3-as1-301</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="createCounter"> + </string>
+    <string name="title_activity_counter">CounterActivity</string>
+    <string name="counter_name">Enter a name</string>
+    <string name="counter_done">Done</string>
+    <string name="counter_cancel">Cancel</string>
 
 </resources>
