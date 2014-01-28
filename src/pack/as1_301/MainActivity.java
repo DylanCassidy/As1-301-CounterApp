@@ -21,7 +21,6 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity {
 	private static final String FILENAME = "midday.sav";
-	private ListView counterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,10 @@ public class MainActivity extends Activity {
     	
     	ArrayAdapter adapter = new ArrayAdapter<Counter>(this, 
     	        R.layout.counter_listview, counters);
-    	ListView listView = (ListView) findViewById(R.id.listview);
+    	ListView counterList = (ListView) findViewById(R.id.listview);
+    	counterList.setAdapter(adapter);
+    	
+    	
     }
     
     private ArrayList<Counter> loadFromFile() {
