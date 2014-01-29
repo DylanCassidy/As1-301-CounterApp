@@ -31,7 +31,7 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        clearFile();
+        clearFile(); // TODO: REMOVE
     }
 
 
@@ -108,12 +108,10 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
                 BufferedReader in = new BufferedReader(new InputStreamReader(fis));
                 String line = in.readLine();
                 
-                Counter counter = deserialization(line);
-                
-                while (counter != null) {
+                while (line != null) {
+                	Counter counter = deserialization(line);
                 	counters.add(counter);
                     line = in.readLine();
-                    counter = deserialization(line);
                 }
 
         } catch (FileNotFoundException e) {

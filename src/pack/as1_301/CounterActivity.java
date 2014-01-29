@@ -11,11 +11,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 
 
 public class CounterActivity extends Activity {
 	private static final String FILENAME = "midday.sav";
-	private Counter counter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,8 @@ public class CounterActivity extends Activity {
 	}
 	
 	public void callDone(View v) {
-		counter = new Counter(getResources().getString(R.id.counter_name));
+		EditText counterText = (EditText) findViewById(R.id.counter_name);
+		Counter counter = new Counter(counterText.getText().toString());
 		if (counter.getName().isEmpty()) {
 			return;
 		}
@@ -60,7 +61,7 @@ public class CounterActivity extends Activity {
 	
 	private String serialization(Counter counter) {
          Gson gson = new Gson();
-         String json = gson.toJson(counter);
+         String json = gson.toJson(counter) + "\n";
          return json;
 	 }
 
