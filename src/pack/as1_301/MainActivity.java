@@ -3,6 +3,7 @@ package pack.as1_301;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -12,20 +13,25 @@ import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity /*implements AdapterView.OnItemClickListener, View.OnClickListener*/ {
 	private static final String FILENAME = "midday.sav";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        clearFile();
     }
 
 
@@ -51,15 +57,49 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
     	super.onResume();
+    	ListView counterList = (ListView) findViewById(R.id.counterList);
+    	//ListView counterList = new ListView(this);
     	ArrayList<Counter> counters = loadFromFile();
     	
-    	ArrayAdapter adapter = new ArrayAdapter<Counter>(this, 
-    	        R.layout.counter_listview, counters);
-    	ListView counterList = (ListView) findViewById(R.id.listview);
+    	ArrayAdapter<Counter> adapter = new ArrayAdapter<Counter>(this, 
+    	        R.layout.counter_listview, counters)/* {
+    	            @Override
+    	            public View getView(int position, View convertView, ViewGroup parent) {
+    	                View row =  super.getView(position, convertView, parent);
+
+    	                View left = row.findViewById(R.id.counter_name);
+    	                left.setTag(position);
+    	                left.setOnClickListener(MainActivity.this);
+    	                View right = row.findViewById(R.id.counter_options);
+    	                right.setTag(position);
+    	                right.setOnClickListener(MainActivity.this);
+    	                
+    	                return row;
+    	            }
+    	        }*/;
     	counterList.setAdapter(adapter);
     	
-    	
+    	//counterList.setOnItemClickListener(this);
     }
+    
+    /*@Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+        case R.id.counter_name:
+            Toast.makeText(this, "Left Accessory "+v.getTag(), Toast.LENGTH_SHORT).show();
+            break;
+        case R.id.counter_options:
+            Toast.makeText(this, "Right Accessory "+v.getTag(), Toast.LENGTH_SHORT).show();
+            break;
+        default:
+            break;
+        }
+    }
+    
+    @Override
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        Toast.makeText(this, "Item Click "+position, Toast.LENGTH_SHORT).show();
+    }*/
     
     private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
@@ -72,7 +112,8 @@ public class MainActivity extends Activity {
                 
                 while (counter != null) {
                 	counters.add(counter);
-                        line = in.readLine();
+                    line = in.readLine();
+                    counter = deserialization(line);
                 }
 
         } catch (FileNotFoundException e) {
@@ -83,6 +124,20 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
         }
         return counters;
+	}
+    
+    private void clearFile() {
+		try {
+			FileOutputStream fos = openFileOutput(FILENAME,
+					Context.MODE_PRIVATE);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
     
     private Counter deserialization(String text) {
