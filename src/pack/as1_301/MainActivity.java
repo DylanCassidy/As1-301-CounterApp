@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity /*implements AdapterView.OnItemClickListener, View.OnClickListener*/ {
+public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String FILENAME = "midday.sav";
 
     @Override
@@ -62,44 +62,25 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
     	ArrayList<Counter> counters = loadFromFile();
     	
     	ArrayAdapter<Counter> adapter = new ArrayAdapter<Counter>(this, 
-    	        R.layout.counter_listview, counters)/* {
+    	        R.layout.counter_listview, counters) {
     	            @Override
     	            public View getView(int position, View convertView, ViewGroup parent) {
     	                View row =  super.getView(position, convertView, parent);
 
-    	                View left = row.findViewById(R.id.counter_name);
-    	                left.setTag(position);
-    	                left.setOnClickListener(MainActivity.this);
-    	                View right = row.findViewById(R.id.counter_options);
-    	                right.setTag(position);
-    	                right.setOnClickListener(MainActivity.this);
+    	                View button = row.findViewById(R.id.listview);
+    	                button.setTag(position);
+    	                button.setOnClickListener(MainActivity.this);
     	                
     	                return row;
     	            }
-    	        }*/;
+    	        };
     	counterList.setAdapter(adapter);
-    	
-    	//counterList.setOnItemClickListener(this);
-    }
-    
-    /*@Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-        case R.id.counter_name:
-            Toast.makeText(this, "Left Accessory "+v.getTag(), Toast.LENGTH_SHORT).show();
-            break;
-        case R.id.counter_options:
-            Toast.makeText(this, "Right Accessory "+v.getTag(), Toast.LENGTH_SHORT).show();
-            break;
-        default:
-            break;
-        }
     }
     
     @Override
-    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-        Toast.makeText(this, "Item Click "+position, Toast.LENGTH_SHORT).show();
-    }*/
+    public void onClick(View v) {
+    	finish();
+    }
     
     private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
