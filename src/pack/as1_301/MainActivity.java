@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        clearFile(); // TODO: REMOVE
+        //clearFile(); // TODO: REMOVE
     }
 
 
@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     
     public void callCreate(View v) {
 		// Create a counter
-    	Intent intent = new Intent(this, CounterActivity.class);
+    	Intent intent = new Intent(this, CreateCounterActivity.class);
     	startActivity(intent);
 	}
     
@@ -68,7 +68,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     	                View row =  super.getView(position, convertView, parent);
 
     	                View button = row.findViewById(R.id.listview);
-    	                button.setTag(position);
     	                button.setOnClickListener(MainActivity.this);
     	                
     	                return row;
@@ -79,7 +78,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     
     @Override
     public void onClick(View v) {
-    	finish();
+    	Intent intent = new Intent(this, CounterActivity.class);
+    	startActivity(intent);
     }
     
     private ArrayList<Counter> loadFromFile() {
