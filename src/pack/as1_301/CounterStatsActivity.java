@@ -17,6 +17,8 @@ public class CounterStatsActivity extends Activity {
 	private ListView counterList;
 	private ArrayAdapter<Date> adapter;
 	
+	// sets up the class for use
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.counter_stats);
@@ -27,6 +29,8 @@ public class CounterStatsActivity extends Activity {
 	    dates = currentCounter.getChanges();
 	}
 	
+	// refreshes the view with current values
+	@Override
 	protected void onResume() {
 		super.onResume();
 		dates = currentCounter.getChanges();
@@ -34,6 +38,7 @@ public class CounterStatsActivity extends Activity {
     	counterList.setAdapter(adapter);
 	}
     
+	// returns a counter when given a serialized text
     private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);

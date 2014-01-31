@@ -24,6 +24,7 @@ public class CounterActivity extends Activity {
 	private TextView myIncTextView;
 	private TextView myNameTextView;
 	
+	// sets up the class for use
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,6 +37,9 @@ public class CounterActivity extends Activity {
 		myNameTextView = (TextView) findViewById(R.id.counter_name_display);
 	}
 	 
+	// loads the list of all the counters from a file and checks that the current counter still exists
+	// calls finish if the current counter was deleted
+	@Override
 	protected void onResume() {
 		super.onResume();
 		counters = loadFromFile();
@@ -54,6 +58,8 @@ public class CounterActivity extends Activity {
     	}
 	}
 	
+	// called when the increment textview was clicked
+	// increments the current counter, updates the counter list, and saves the counter list into a file
     public void callIncClick(View v) {
     	currentCounter.incCount();
     	myIncTextView.setText("" + currentCounter.getCount());
@@ -66,6 +72,8 @@ public class CounterActivity extends Activity {
     	saveInFile(counters);
     }
 	
+    // called when the stats button was clicked
+    // launches the CounterStatsActivity activity and provides the current counter to that activity
     public void callStatsClick(View v) {
     	Intent intent = new Intent(this, CounterStatsActivity.class);
     	String serialCurrentCounter = serialization(currentCounter);
@@ -73,6 +81,8 @@ public class CounterActivity extends Activity {
     	startActivity(intent);
     }
 	
+    // called when the settings button was clicked
+    // launches the CounterSettingsActivity activity and provides the current counter to that activity
     public void callSettingsClick(View v) {
     	Intent intent = new Intent(this, CounterSettingsActivity.class);
     	String serialCurrentCounter = serialization(currentCounter);
@@ -80,6 +90,7 @@ public class CounterActivity extends Activity {
     	startActivity(intent);
     }
     
+    // loads the counter list from a file
     private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
         try {
@@ -101,6 +112,7 @@ public class CounterActivity extends Activity {
         return counters;
 	}
     
+    // saves the counter list to a file, overwriting what was there
     private void saveInFile(ArrayList<Counter> counters) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
@@ -119,12 +131,14 @@ public class CounterActivity extends Activity {
 		}
 	}
     
+    // returns a counter when given a serialized text
     private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
     
+    // returns a string when given a counter
     private String serialization(Counter counter) {
         Gson gson = new Gson();
         String json = gson.toJson(counter) + "\n";

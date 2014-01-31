@@ -20,6 +20,7 @@ public class CreateCounterActivity extends Activity {
 	private static final String FILENAME = "midday.sav";
 	private ArrayList<Counter> counters;
 	
+	// sets up the class for use
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,26 +28,32 @@ public class CreateCounterActivity extends Activity {
 		counters = loadFromFile();
 	}
 
+	// called when the done button was clicked
+	// checks that the EditText field is not empty and is not a name that is already in use
+	// creates a counter and saves it into a file, appending it to the end
 	public void callDone(View v) {
 		EditText counterText = (EditText) findViewById(R.id.counter_name);
-		Counter counter = new Counter(counterText.getText().toString());
-		if (counter.getName().isEmpty()) {
+		if (counterText.getText().toString().isEmpty()) {
 			return;
 		}
 		for (int i = 0; i < counters.size(); i++) {
-    		if (counters.get(i).getName().equals(counter.getName())) {
+    		if (counters.get(i).getName().equals(counterText.getText().toString())) {
     			return;
     		}
     	}
+		Counter counter = new Counter(counterText.getText().toString());
 		saveInFile(counter);
 		finish();
 	}
 	
+	// called when the cancel button was clicked
+	// calls finish and returns to the previous activity
 	public void callCancel(View v) {
 		finish();
 	}
 	
-	private ArrayList<Counter> loadFromFile() {
+	// loads the counter list from a file
+    private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
         try {
                 FileInputStream fis = openFileInput(FILENAME);
@@ -67,6 +74,7 @@ public class CreateCounterActivity extends Activity {
         return counters;
 	}
 	
+    // saves a counter to a file, appending it to the end
 	private void saveInFile(Counter counter) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
@@ -80,15 +88,17 @@ public class CreateCounterActivity extends Activity {
 		}
 	}
 	
-	private Counter deserialization(String text) {
+	// returns a counter when given a serialized text
+    private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
-	
-	private String serialization(Counter counter) {
-         Gson gson = new Gson();
-         String json = gson.toJson(counter) + "\n";
-         return json;
+    
+    // returns a string when given a counter
+    private String serialization(Counter counter) {
+        Gson gson = new Gson();
+        String json = gson.toJson(counter) + "\n";
+        return json;
 	 }
 }

@@ -22,6 +22,7 @@ public class CounterSettingsActivity extends Activity {
 	private ArrayList<Counter> counters;
 	private Counter currentCounter;
 
+	// sets up the class for use
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,9 @@ public class CounterSettingsActivity extends Activity {
 		counters = loadFromFile();
     }
 	
+	// called when the rename button was clicked
+	// checks that the EditText field is not empty and is not a name that is already in use
+	// renames the current counter and updates the counter list, then saves the counter list to a file
 	public void callRename(View v) {
 		EditText counterText = (EditText) findViewById(R.id.counter_new_name);
 		if (counterText.getText().toString().isEmpty()) {
@@ -53,6 +57,9 @@ public class CounterSettingsActivity extends Activity {
 		finish();
 	}
 	
+	// called when the reset button was clicked
+	// checks that the current counter's value is not already equal to zero
+	// resets the current counter and updates the counter list, then saves the counter list to a file
 	public void callReset(View v) {
 		if (currentCounter.getCount() == 0) {
 			return;
@@ -68,6 +75,8 @@ public class CounterSettingsActivity extends Activity {
 		finish();
 	}
 
+	// called when the delete button was clicked
+	// deletes the current counter and updates the counter list, then saves the counter list to a file
 	public void callDelete(View v) {
 		for (int i = 0; i < counters.size(); i++) {
     		if (counters.get(i).getName().equals(currentCounter.getName())) {
@@ -79,7 +88,8 @@ public class CounterSettingsActivity extends Activity {
 		finish();
 	}
 	
-	private ArrayList<Counter> loadFromFile() {
+	// loads the counter list from a file
+    private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
         try {
                 FileInputStream fis = openFileInput(FILENAME);
@@ -93,16 +103,15 @@ public class CounterSettingsActivity extends Activity {
                 }
 
         } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
         } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
         }
         return counters;
 	}
-	
-	private void saveInFile(ArrayList<Counter> counters) {
+    
+    // saves the counter list to a file, overwriting what was there
+    private void saveInFile(ArrayList<Counter> counters) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_PRIVATE);
@@ -114,20 +123,20 @@ public class CounterSettingsActivity extends Activity {
 			
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
     
+    // returns a counter when given a serialized text
     private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
     
+    // returns a string when given a counter
     private String serialization(Counter counter) {
         Gson gson = new Gson();
         String json = gson.toJson(counter) + "\n";

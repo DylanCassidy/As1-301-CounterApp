@@ -26,6 +26,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	private ListView counterList;
 	private ArrayAdapter<Counter> adapter;
 
+	// sets up the class for use
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         counters = loadFromFile();
     }
     
+    // refreshes the view with current values
     @Override
     protected void onResume() {
     	super.onResume();
@@ -43,13 +45,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     	counterList.setAdapter(adapter);
     }
     
- // The Create Counter button has been pushed, change to CreateCounterActivity
+    // called when the create counter (+) button was clicked
+    // launches the CreateCounterActivity activity
     public void callCreate(View v) {
     	Intent intent = new Intent(this, CreateCounterActivity.class);
     	startActivity(intent);
 	}
     
-    // The Reorder button has been pushed, reorder all the counters in the counters list based on highest count
+    // called when the reorder button was clicked
+    // reorganizes the counter list based on highest counter value, then saves the counter list
     public void callReorder(View v) {
     	@SuppressWarnings("unchecked")
 		ArrayList<Counter> templist = (ArrayList<Counter>) counters.clone();
@@ -72,8 +76,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     	counterList.setAdapter(adapter);
     }
     
+    // A Counter in the listview has been pushed, change to CounterActivity and provide the pushed counter to that activity
     @Override
-    // A Counter in the listview has been pushed, change to CounterActivity and provide the pushed counter
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
     	Counter counter = counters.get(position);
     	Intent intent = new Intent(this, CounterActivity.class);
@@ -82,6 +86,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     	startActivity(intent);
     }
     
+    // loads the counter list from a file
     private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
         try {
@@ -103,6 +108,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         return counters;
 	}
     
+    // saves the counter list to a file, overwriting what was there
     private void saveInFile(ArrayList<Counter> counters) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
@@ -121,14 +127,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		}
 	}
     
-    // simple deserialization function. takes a string and converts it to a counter
+    // returns a counter when given a serialized text
     private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
     
-    // simple serialization function. takes a counter and converts it into a string
+    // returns a string when given a counter
     private String serialization(Counter counter) {
         Gson gson = new Gson();
         String json = gson.toJson(counter) + "\n";

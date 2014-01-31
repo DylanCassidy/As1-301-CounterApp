@@ -8,6 +8,7 @@ public class Counter {
 	private int count;
 	private ArrayList<Date> changes;
 
+	// Constructor: takes a string that will be stored as the name of the counter
 	public Counter(String counterName) {
 		name = counterName;
 		count = 0;
@@ -26,20 +27,24 @@ public class Counter {
 		return count;
 	}
 	
+	// increments the counter's value and logs the increment
 	public void incCount() {
 		count++;
 		Date date = new Date();
 		changes.add(date);
 	}
 	
+	// resets the counter's value and resets it's log
 	public void resetCount() {
 		count = 0;
+		changes.clear();
 	}
 	
 	public ArrayList<Date> getChanges() {
 		return changes;
 	}
 
+	// returns the counter's name when called
 	public String toString() {
 		return name;
 	}
