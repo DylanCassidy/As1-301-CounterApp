@@ -3,47 +3,47 @@ package pack.as1_301;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.google.gson.Gson;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
-import android.view.View;
-import android.widget.EditText;
+import android.content.Intent;
+import android.os.Bundle;
 
-public class CreateCounterActivity extends Activity {
+public class CounterStatsActivity extends Activity {
 	private static final String FILENAME = "midday.sav";
 	private ArrayList<Counter> counters;
+	private Counter currentCounter;
 	
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.create_counter);
+		setContentView(R.layout.counter_stats);
+		Intent intent = getIntent();
+	    String temp = intent.getStringExtra(MainActivity.CURRENT_COUNTER);
+	    if (temp != null) {
+	    	currentCounter = deserialization(temp);
+	    }
+	    else {
+	    	currentCounter = null;
+	    }
 		counters = loadFromFile();
 	}
-
-	public void callDone(View v) {
-		EditText counterText = (EditText) findViewById(R.id.counter_name);
-		Counter counter = new Counter(counterText.getText().toString());
-		if (counter.getName().isEmpty()) {
-			return;
-		}
-		for (int i = 0; i < counters.size(); i++) {
-    		if (counters.get(i).getName().equals(counter.getName())) {
-    			return;
-    		}
-    	}
-		saveInFile(counter);
-		finish();
-	}
 	
-	public void callCancel(View v) {
-		finish();
+	protected void onResume() {
+		if (currentCounter == null) {
+			ArrayList<ArrayList<Date>> alldates = new ArrayList<ArrayList<Date>>();
+			for (int i = 0; i < counters.size(); i++) {
+				alldates.add(counters.get(i).getChanges());
+			}
+		} 
+		else {
+			ArrayList<Date> dates = currentCounter.getChanges();
+			dates.clear(); // Fake use of variable
+		}
 	}
 	
 	private ArrayList<Counter> loadFromFile() {
@@ -66,29 +66,10 @@ public class CreateCounterActivity extends Activity {
         }
         return counters;
 	}
-	
-	private void saveInFile(Counter counter) {
-		try {
-			FileOutputStream fos = openFileOutput(FILENAME,
-					Context.MODE_APPEND);
-			fos.write(serialization(counter).getBytes());
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private Counter deserialization(String text) {
+    
+    private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
-	
-	private String serialization(Counter counter) {
-         Gson gson = new Gson();
-         String json = gson.toJson(counter) + "\n";
-         return json;
-	 }
 }

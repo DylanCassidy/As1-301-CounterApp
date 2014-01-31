@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.google.gson.Gson;
 
@@ -15,70 +14,77 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 	private static final String FILENAME = "midday.sav";
+	public final static String CURRENT_COUNTER = "pack.as1_301.As1-301-CounterApp.COUNTER";
+	private ArrayList<Counter> counters;
+	private ListView counterList;
+	private ArrayAdapter<Counter> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //clearFile(); // TODO: REMOVE
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        counterList = (ListView) findViewById(R.id.counterList);
+        counterList.setOnItemClickListener(this);
+        counters = loadFromFile();
     }
     
-    @Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-    }
-    
+    // The Create Counter button has been pushed, change to CreateCounterActivity
     public void callCreate(View v) {
-		// Create a counter
     	Intent intent = new Intent(this, CreateCounterActivity.class);
     	startActivity(intent);
 	}
     
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    	ListView counterList = (ListView) findViewById(R.id.counterList);
-    	//ListView counterList = new ListView(this);
-    	ArrayList<Counter> counters = loadFromFile();
-    	
-    	ArrayAdapter<Counter> adapter = new ArrayAdapter<Counter>(this, 
-    	        R.layout.counter_listview, counters) {
-    	            @Override
-    	            public View getView(int position, View convertView, ViewGroup parent) {
-    	                View row =  super.getView(position, convertView, parent);
-
-    	                View button = row.findViewById(R.id.listview);
-    	                button.setOnClickListener(MainActivity.this);
-    	                
-    	                return row;
-    	            }
-    	        };
+    // The Stats button has been pushed, change to CounterStatsActivity
+    public void callStats(View v) {
+    	Intent intent = new Intent(this, CounterStatsActivity.class);
+    	startActivity(intent);
+    }
+    
+    // The Reorder button has been pushed, reorder all the counters in the counters list based on highest count
+    public void callReorder(View v) {
+    	@SuppressWarnings("unchecked")
+		ArrayList<Counter> templist = (ArrayList<Counter>) counters.clone();
+    	ArrayList<Counter> orderedCounters = new ArrayList<Counter>();
+    	Counter largest = null;
+    	for (int i = 0; i < counters.size(); i++) {
+    		int max = Integer.MIN_VALUE;
+    		for (int k = 0; k < templist.size(); k++) {
+        		if (templist.get(k).getCount() > max) {
+        			max = templist.get(k).getCount();
+        			largest = templist.get(k);
+        		}
+        	}
+    		orderedCounters.add(largest);
+    		templist.remove(largest);
+    	}
+    	counters = orderedCounters;
+    	saveInFile(counters);
+    	adapter = new ArrayAdapter<Counter>(this, R.layout.counter_listview, counters);
     	counterList.setAdapter(adapter);
     }
     
     @Override
-    public void onClick(View v) {
+    protected void onResume() {
+    	super.onResume();
+    	counters = loadFromFile();
+    	adapter = new ArrayAdapter<Counter>(this, R.layout.counter_listview, counters);
+    	counterList.setAdapter(adapter);
+    }
+    
+    @Override
+    // A Counter in the listview has been pushed, change to CounterActivity and provide the pushed counter
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+    	Counter counter = counters.get(position);
     	Intent intent = new Intent(this, CounterActivity.class);
+    	String currentCounter = serialization(counter);
+    	intent.putExtra(CURRENT_COUNTER, currentCounter);
     	startActivity(intent);
     }
     
@@ -96,33 +102,43 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
 
         } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
         } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
         }
         return counters;
 	}
     
-    private void clearFile() {
+    private void saveInFile(ArrayList<Counter> counters) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_PRIVATE);
+			
+			for (int i = 0; i < counters.size(); i++) {
+				Counter counter = counters.get(i);
+				fos.write(serialization(counter).getBytes());
+            }
+			
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
     
+    // simple deserialization function. takes a string and converts it to a counter
     private Counter deserialization(String text) {
         Gson gson = new Gson();
         Counter new_counter = gson.fromJson(text, Counter.class);
         return new_counter;
     }
+    
+    // simple serialization function. takes a counter and converts it into a string
+    private String serialization(Counter counter) {
+        Gson gson = new Gson();
+        String json = gson.toJson(counter) + "\n";
+        return json;
+	 }
 	
 }

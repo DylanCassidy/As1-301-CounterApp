@@ -4,10 +4,20 @@
     <string name="app_name">dylan3-as1-301</string>
     <string name="action_settings">Settings</string>
     <string name="create_counter"> + </string>
+    <string name="title_activity_create_counter">CreateCounterActivity</string>
     <string name="title_activity_counter">CounterActivity</string>
+    <string name="title_activity_counter_stats">CounterStatsActivity</string>
+    <string name="title_activity_counter_settings">CounterSettingsActivity</string>
     <string name="counter_name">Enter a name</string>
     <string name="counter_done">Done</string>
     <string name="counter_cancel">Cancel</string>
     <string name="counter_settings">Settings</string>
+    <string name="counter_stats">Stats</string>
+    <string name="counter_delete">Delete Counter</string>
+    <string name="counter_reset">Reset Counter</string>
+    <string name="counter_rename">Rename Counter</string>
+    <string name="counter_new_name">Enter a name</string>
+    <string name="main_stats">Stats</string>
+    <string name="reorder">Reorder</string>
 
 </resources>

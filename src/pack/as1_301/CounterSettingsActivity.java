@@ -15,69 +15,71 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
 
-public class CounterActivity extends Activity {
+public class CounterSettingsActivity extends Activity {
 	private static final String FILENAME = "midday.sav";
 	private ArrayList<Counter> counters;
 	private Counter currentCounter;
-	private TextView myTextView;
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.counter);
-		Intent intent = getIntent();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.counter_settings);
+        Intent intent = getIntent();
 	    String temp = intent.getStringExtra(MainActivity.CURRENT_COUNTER);
 	    currentCounter = deserialization(temp);
 		counters = loadFromFile();
-		myTextView = (TextView) findViewById(R.id.counter_inc); 
-	}
-	 
-	protected void onResume() {
-		super.onResume();
-		counters = loadFromFile();
-		boolean stillIn = false;
-    	for (int i = 0; i < counters.size(); i++) {
+    }
+	
+	public void callRename(View v) {
+		EditText counterText = (EditText) findViewById(R.id.counter_new_name);
+		if (counterText.getText().toString().isEmpty()) {
+			return;
+		}
+		for (int i = 0; i < counters.size(); i++) {
+    		if (counters.get(i).getName().equals(counterText.getText().toString())) {
+    			return;
+    		}
+    	}
+		for (int i = 0; i < counters.size(); i++) {
     		if (counters.get(i).getName().equals(currentCounter.getName())) {
-    			stillIn = true;
-    			currentCounter = counters.get(i);
-    			myTextView.setText("" + currentCounter.getCount());
+    			currentCounter.setName(counterText.getText().toString());
+    			counters.set(i, currentCounter);
     			break;
     		}
     	}
-    	if (!stillIn) {
-    		finish();
-    	}
+		saveInFile(counters);
+		finish();
 	}
 	
-    public void onIncClick(View v) {
-    	currentCounter.incCount();
-    	myTextView.setText("" + currentCounter.getCount());
-    	for (int i = 0; i < counters.size(); i++) {
+	public void callReset(View v) {
+		if (currentCounter.getCount() == 0) {
+			return;
+		}
+		currentCounter.resetCount();
+		for (int i = 0; i < counters.size(); i++) {
     		if (counters.get(i).getName().equals(currentCounter.getName())) {
     			counters.set(i, currentCounter);
     			break;
     		}
     	}
-    	saveInFile(counters);
-    }
+		saveInFile(counters);
+		finish();
+	}
+
+	public void callDelete(View v) {
+		for (int i = 0; i < counters.size(); i++) {
+    		if (counters.get(i).getName().equals(currentCounter.getName())) {
+    			counters.remove(i);
+    			break;
+    		}
+    	}
+		saveInFile(counters);
+		finish();
+	}
 	
-    public void onStatsClick(View v) {
-    	Intent intent = new Intent(this, CounterStatsActivity.class);
-    	String serialCurrentCounter = serialization(currentCounter);
-    	intent.putExtra(MainActivity.CURRENT_COUNTER, serialCurrentCounter);
-    	startActivity(intent);
-    }
-	
-    public void onSettingsClick(View v) {
-    	Intent intent = new Intent(this, CounterSettingsActivity.class);
-    	String serialCurrentCounter = serialization(currentCounter);
-    	intent.putExtra(MainActivity.CURRENT_COUNTER, serialCurrentCounter);
-    	startActivity(intent);
-    }
-    
-    private ArrayList<Counter> loadFromFile() {
+	private ArrayList<Counter> loadFromFile() {
     	ArrayList<Counter> counters = new ArrayList<Counter>();
         try {
                 FileInputStream fis = openFileInput(FILENAME);
@@ -91,14 +93,16 @@ public class CounterActivity extends Activity {
                 }
 
         } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
         } catch (IOException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
         }
         return counters;
 	}
-    
-    private void saveInFile(ArrayList<Counter> counters) {
+	
+	private void saveInFile(ArrayList<Counter> counters) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_PRIVATE);
@@ -110,8 +114,10 @@ public class CounterActivity extends Activity {
 			
 			fos.close();
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

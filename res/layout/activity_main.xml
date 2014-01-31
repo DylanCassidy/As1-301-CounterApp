@@ -12,16 +12,48 @@
     <ListView
         android:id="@+id/counterList"
         android:layout_width="match_parent"
-        android:layout_height="382dp"
+        android:layout_height="380dp"
         android:layout_gravity="top" >
-
     </ListView>
 
-    <Button
-        android:id="@+id/createCounter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="callCreate"
-        android:text="@string/create_counter" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/create_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="callCreate"
+            android:layout_weight="1"
+            android:text="@string/create_counter" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/main_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="callStats"
+            android:text="@string/main_stats" />
+        
+        <Space
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent" />
+        
+        <Button
+            android:id="@+id/reorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="callReorder"
+            android:text="@string/reorder" />
+
+    </LinearLayout>
 
 </LinearLayout>

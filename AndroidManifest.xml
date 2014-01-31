@@ -23,8 +23,20 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="pack.as1_301.CreateCounterActivity"
+            android:label="@string/title_activity_create_counter" >
+        </activity>
+        <activity
             android:name="pack.as1_301.CounterActivity"
             android:label="@string/title_activity_counter" >
+        </activity>
+        <activity
+            android:name="pack.as1_301.CounterStatsActivity"
+            android:label="@string/title_activity_counter_stats" >
+        </activity>
+        <activity
+            android:name="pack.as1_301.CounterSettingsActivity"
+            android:label="@string/title_activity_counter_settings" >
         </activity>
     </application>
 
