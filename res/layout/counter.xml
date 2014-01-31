@@ -12,7 +12,7 @@
         android:layout_weight="4"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="onIncClick"
+        android:onClick="callIncClick"
         android:textSize="100sp" />
 
     <TextView
@@ -27,14 +27,14 @@
         android:id="@+id/counter_stats"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:onClick="onStatsClick"
+        android:onClick="callStatsClick"
         android:text="@string/counter_stats" />
     
     <Button
         android:id="@+id/counter_settings"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:onClick="onSettingsClick"
+        android:onClick="callSettingsClick"
         android:text="@string/counter_settings" />
 
 </LinearLayout>

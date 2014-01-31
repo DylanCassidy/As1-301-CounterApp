@@ -54,7 +54,7 @@ public class CounterActivity extends Activity {
     	}
 	}
 	
-    public void onIncClick(View v) {
+    public void callIncClick(View v) {
     	currentCounter.incCount();
     	myIncTextView.setText("" + currentCounter.getCount());
     	for (int i = 0; i < counters.size(); i++) {
@@ -66,14 +66,14 @@ public class CounterActivity extends Activity {
     	saveInFile(counters);
     }
 	
-    public void onStatsClick(View v) {
+    public void callStatsClick(View v) {
     	Intent intent = new Intent(this, CounterStatsActivity.class);
     	String serialCurrentCounter = serialization(currentCounter);
     	intent.putExtra(MainActivity.CURRENT_COUNTER, serialCurrentCounter);
     	startActivity(intent);
     }
 	
-    public void onSettingsClick(View v) {
+    public void callSettingsClick(View v) {
     	Intent intent = new Intent(this, CounterSettingsActivity.class);
     	String serialCurrentCounter = serialization(currentCounter);
     	intent.putExtra(MainActivity.CURRENT_COUNTER, serialCurrentCounter);
