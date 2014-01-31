@@ -10,7 +10,7 @@
     tools:context=".MainActivity" >
 
     <ListView
-        android:id="@+id/counterList"
+        android:id="@+id/counter_list"
         android:layout_width="match_parent"
         android:layout_height="380dp"
         android:layout_gravity="top" >
@@ -32,14 +32,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent" />
-
-        <Button
-            android:id="@+id/main_stats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="callStats"
-            android:text="@string/main_stats" />
         
         <Space
             android:layout_width="0dp"

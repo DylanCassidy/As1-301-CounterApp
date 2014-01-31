@@ -21,7 +21,8 @@ public class CounterActivity extends Activity {
 	private static final String FILENAME = "midday.sav";
 	private ArrayList<Counter> counters;
 	private Counter currentCounter;
-	private TextView myTextView;
+	private TextView myIncTextView;
+	private TextView myNameTextView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,8 @@ public class CounterActivity extends Activity {
 	    String temp = intent.getStringExtra(MainActivity.CURRENT_COUNTER);
 	    currentCounter = deserialization(temp);
 		counters = loadFromFile();
-		myTextView = (TextView) findViewById(R.id.counter_inc); 
+		myIncTextView = (TextView) findViewById(R.id.counter_inc);
+		myNameTextView = (TextView) findViewById(R.id.counter_name_display);
 	}
 	 
 	protected void onResume() {
@@ -42,7 +44,8 @@ public class CounterActivity extends Activity {
     		if (counters.get(i).getName().equals(currentCounter.getName())) {
     			stillIn = true;
     			currentCounter = counters.get(i);
-    			myTextView.setText("" + currentCounter.getCount());
+    			myIncTextView.setText("" + currentCounter.getCount());
+    			myNameTextView.setText("" + currentCounter.getName());
     			break;
     		}
     	}
@@ -53,7 +56,7 @@ public class CounterActivity extends Activity {
 	
     public void onIncClick(View v) {
     	currentCounter.incCount();
-    	myTextView.setText("" + currentCounter.getCount());
+    	myIncTextView.setText("" + currentCounter.getCount());
     	for (int i = 0; i < counters.size(); i++) {
     		if (counters.get(i).getName().equals(currentCounter.getName())) {
     			counters.set(i, currentCounter);

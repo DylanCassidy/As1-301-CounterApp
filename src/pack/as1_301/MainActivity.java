@@ -30,22 +30,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        counterList = (ListView) findViewById(R.id.counterList);
+        counterList = (ListView) findViewById(R.id.counter_list);
         counterList.setOnItemClickListener(this);
         counters = loadFromFile();
     }
     
-    // The Create Counter button has been pushed, change to CreateCounterActivity
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	counters = loadFromFile();
+    	adapter = new ArrayAdapter<Counter>(this, R.layout.counter_listview, counters);
+    	counterList.setAdapter(adapter);
+    }
+    
+ // The Create Counter button has been pushed, change to CreateCounterActivity
     public void callCreate(View v) {
     	Intent intent = new Intent(this, CreateCounterActivity.class);
     	startActivity(intent);
 	}
-    
-    // The Stats button has been pushed, change to CounterStatsActivity
-    public void callStats(View v) {
-    	Intent intent = new Intent(this, CounterStatsActivity.class);
-    	startActivity(intent);
-    }
     
     // The Reorder button has been pushed, reorder all the counters in the counters list based on highest count
     public void callReorder(View v) {
@@ -66,14 +68,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     	}
     	counters = orderedCounters;
     	saveInFile(counters);
-    	adapter = new ArrayAdapter<Counter>(this, R.layout.counter_listview, counters);
-    	counterList.setAdapter(adapter);
-    }
-    
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    	counters = loadFromFile();
     	adapter = new ArrayAdapter<Counter>(this, R.layout.counter_listview, counters);
     	counterList.setAdapter(adapter);
     }

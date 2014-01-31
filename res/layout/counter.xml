@@ -15,9 +15,12 @@
         android:onClick="onIncClick"
         android:textSize="100sp" />
 
-    <Space
+    <TextView
+        android:id="@+id/counter_name_display"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30sp"
         android:layout_weight="1" />
     
     <Button

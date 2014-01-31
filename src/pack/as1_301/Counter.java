@@ -11,6 +11,7 @@ public class Counter {
 	public Counter(String counterName) {
 		name = counterName;
 		count = 0;
+		changes = new ArrayList<Date>();
 	}
 	
 	public String getName() {
